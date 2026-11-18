@@ -1287,6 +1287,7 @@
 .shwapno-cart-backdrop {
   display: block;
   padding: 0;
+  background: #0005;
 }
 
 .shwapno-cart-drawer {
@@ -1294,36 +1295,98 @@
   top: 0;
   right: 0;
   display: flex;
-  width: min(420px, 100%);
-  height: 100%;
+  width: min(440px, 100%);
+  height: 100vh;
+  height: 100dvh;
   flex-direction: column;
-  background: white;
-  padding: 18px;
+  overflow: hidden;
+  background: #f7f7f7;
+  box-shadow: -2px 0 12px #0002;
 }
 
 .shwapno-cart-drawer-head {
   display: flex;
+  min-height: 44px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 13px;
+  flex: 0 0 44px;
+  background: #ffda00;
+  padding: 0 12px;
 }
 
 .shwapno-cart-drawer-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin: 0;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .shwapno-cart-drawer-head button {
-  display: grid;
-  width: 32px;
-  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
   place-items: center;
   border: 0;
-  border-radius: 50%;
-  background: #f3f3f3;
+  background: transparent;
   cursor: pointer;
+  font-size: 14px;
+}
+
+.shwapno-delivery-progress {
+  z-index: 1;
+  flex: 0 0 auto;
+  background: #fff;
+  box-shadow: 0 2px 5px #00000012;
+  padding: 7px 20px 11px;
+  text-align: center;
+}
+
+.shwapno-delivery-progress > strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.shwapno-progress-track {
+  position: relative;
+  height: 24px;
+  overflow: hidden;
+  border: 1px solid #dfe9e3;
+  border-radius: 999px;
+  background: #f4f8f5;
+  box-shadow: 0 2px 5px #0002;
+  color: #252525;
+}
+
+.shwapno-progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 12%;
+  border-radius: inherit;
+  background: #8fe6ae;
+}
+
+.shwapno-progress-label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.shwapno-progress-label.progress-start {
+  left: 4px;
+}
+
+.shwapno-progress-label.progress-current {
+  left: 28%;
+}
+
+.shwapno-progress-label.progress-end {
+  right: 8px;
 }
 
 .shwapno-empty-cart {
@@ -1344,30 +1407,229 @@
 .shwapno-cart-items {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 0;
+  overscroll-behavior: contain;
+  background: #f7f7f7;
 }
 
 .shwapno-cart-line {
   display: flex;
-  min-height: 68px;
+  min-height: 82px;
   align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 12px;
+  gap: 8px;
+  border-bottom: 1px solid #ededed;
+  background: white;
+  padding: 8px 12px 8px 8px;
 }
 
 .shwapno-cart-line img {
   width: 54px;
   height: 54px;
+  flex: 0 0 54px;
   object-fit: contain;
 }
 
-.shwapno-cart-line span {
+.shwapno-cart-product {
   flex: 1;
+  min-width: 0;
 }
 
-.shwapno-cart-line strong {
+.shwapno-cart-product > strong {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.shwapno-cart-product-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+}
+
+.shwapno-cart-prices {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.shwapno-cart-prices > strong {
+  color: #e40019;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.shwapno-cart-prices > span {
+  color: #4a4a4a;
+  font-size: 13px;
+}
+
+.shwapno-cart-prices i {
+  padding: 0 2px;
+  color: #e40019;
+  font-style: normal;
+}
+
+.shwapno-cart-controls {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.shwapno-cart-controls > button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0;
+}
+
+.shwapno-cart-controls > .quantity-button {
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px #0003;
+  color: #e40019;
+}
+
+.shwapno-cart-controls > span {
+  min-width: 20px;
+  color: #e40019;
+  font-size: 16px;
+  text-align: center;
+}
+
+.shwapno-cart-footer {
+  flex: 0 0 auto;
+  background: white;
+}
+
+.shwapno-cart-coupon {
+  position: relative;
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  gap: 5px;
+  border-bottom: 1px solid #eee;
+  padding: 14px 18px 24px;
+}
+
+.shwapno-cart-coupon input {
+  width: 0;
+  height: 40px;
+  flex: 1;
+  border: 1px solid #d8d8df;
+  border-radius: 6px;
+  background: white;
+  padding: 0 10px;
+}
+
+.shwapno-cart-coupon input::placeholder {
+  color: #9aa1af;
+}
+
+.shwapno-cart-coupon > button {
+  min-height: 31px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 7px;
+  background: #e40019;
+  color: white;
+  cursor: pointer;
+  padding: 4px 11px;
+}
+
+.shwapno-cart-coupon > span[role="status"] {
+  position: absolute;
+  right: 18px;
+  bottom: 3px;
+  color: #c00;
+  font-size: 10px;
+}
+
+.shwapno-cart-actions {
+  display: grid;
+  height: 54px;
+  grid-template-columns: 1fr 1fr;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.shwapno-cart-actions > div,
+.shwapno-cart-actions > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shwapno-cart-actions > div {
+  gap: 4px;
+  background: #ffda00;
+}
+
+.shwapno-cart-actions s {
+  font-size: 14px;
+}
+
+.shwapno-cart-actions > button {
+  border: 0;
+  background: #e40000;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .shwapno-cart-drawer {
+    width: 100%;
+  }
+
+  .shwapno-cart-line {
+    gap: 7px;
+    padding-right: 8px;
+  }
+
+  .shwapno-cart-product-bottom {
+    gap: 4px;
+  }
+
+  .shwapno-cart-prices {
+    gap: 5px;
+  }
+
+  .shwapno-cart-prices > strong {
+    font-size: 16px;
+  }
+
+  .shwapno-cart-prices > span {
+    font-size: 12px;
+  }
+
+  .shwapno-cart-controls {
+    gap: 5px;
+  }
+
+  .shwapno-cart-controls > button {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .shwapno-cart-coupon {
+    padding-right: 17px;
+    padding-left: 17px;
+  }
 }
 
 @media (min-width: 1600px) {
@@ -2045,5 +2307,620 @@
   .shwapno-site *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+.shwapno-cart-checkout-error {
+  margin: 0 18px 10px;
+  color: #c00;
+  font-size: 12px;
+}
+
+.shwapno-checkout-page {
+  min-height: 100vh;
+  overflow: visible;
+  background: #fff;
+}
+
+.shwapno-checkout-header {
+  position: relative;
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fff;
+}
+
+.shwapno-checkout-header h1 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.shwapno-checkout-content {
+  display: grid;
+  width: min(1200px, 100%);
+  min-height: calc(100dvh - 70px);
+  grid-template-columns: minmax(210px, 0.52fr) minmax(0, 1fr);
+  gap: 24px;
+  margin: 24px auto 0;
+}
+
+.shwapno-checkout-time,
+.shwapno-checkout-details {
+  min-width: 0;
+  background: #fff;
+}
+
+.shwapno-checkout-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.shwapno-checkout-time > h2 {
+  min-height: 49px;
+  margin: 0;
+  background: #29455e;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 49px;
+  padding: 0 16px;
+}
+
+.shwapno-checkout-time-options {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+}
+
+.shwapno-checkout-time-options button {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  color: #38495a;
+  cursor: pointer;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.shwapno-checkout-time-options button.is-selected {
+  border-color: #e40019;
+  box-shadow: inset 3px 0 #e40019;
+}
+
+.shwapno-checkout-time-options button span {
+  display: grid;
+  gap: 3px;
+}
+
+.shwapno-checkout-time-options button strong {
+  font-size: 13px;
+}
+
+.shwapno-checkout-time-options button small {
+  color: #697586;
+  font-size: 11px;
+}
+
+.shwapno-checkout-address-heading {
+  display: flex;
+  min-height: 49px;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffda00;
+  padding: 0 16px;
+}
+
+.shwapno-checkout-address-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.shwapno-checkout-address-heading button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.shwapno-checkout-addresses {
+  display: grid;
+  gap: 10px;
+  padding: 12px 0;
+}
+
+.shwapno-checkout-address {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  padding: 8px 14px;
+}
+
+.shwapno-checkout-address.is-selected {
+  border-color: #d7dce2;
+}
+
+.shwapno-checkout-address > label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.shwapno-checkout-address input {
+  accent-color: #e40019;
+}
+
+.shwapno-checkout-address label span {
+  display: grid;
+  gap: 3px;
+}
+
+.shwapno-checkout-address label strong {
+  font-size: 14px;
+}
+
+.shwapno-checkout-address label small {
+  color: #77808c;
+  font-size: 12px;
+}
+
+.shwapno-checkout-address > button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #748397;
+  cursor: pointer;
+}
+
+.shwapno-checkout-empty-address,
+.shwapno-checkout-empty-basket,
+.shwapno-checkout-basket-error {
+  margin: 0;
+  color: #6d7480;
+  font-size: 13px;
+  padding: 12px;
+}
+
+.shwapno-checkout-order {
+  margin-top: auto;
+  padding-top: 6px;
+  border: 1px solid #ededed;
+  background: #fff;
+}
+
+.shwapno-checkout-order-items {
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+.shwapno-checkout-item {
+  display: flex;
+  min-height: 65px;
+  align-items: center;
+  gap: 9px;
+  border-bottom: 1px solid #eee;
+  padding: 7px 12px;
+}
+
+.shwapno-checkout-item img {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  object-fit: contain;
+}
+
+.shwapno-checkout-item > span {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 3px;
+}
+
+.shwapno-checkout-item > span strong {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shwapno-checkout-item small {
+  color: #757d88;
+  font-size: 11px;
+}
+
+.shwapno-checkout-item > strong {
+  color: #263d56;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.shwapno-checkout-total {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 8px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    repeating-linear-gradient(135deg, #d6dee7 0 9px, #fff 9px 18px) border-box;
+  color: #3b6595;
+  font-size: 16px;
+  padding: 2px 16px 0;
+}
+
+.shwapno-checkout-confirm-row {
+  display: grid;
+  min-height: 50px;
+  grid-template-columns: 1fr 1fr;
+  background: #ffda00;
+}
+
+.shwapno-checkout-confirm-row > strong {
+  align-self: center;
+  font-size: 15px;
+  text-align: center;
+}
+
+.shwapno-checkout-confirm-row > button {
+  border: 0;
+  background: #e40019;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.shwapno-checkout-form-backdrop {
+  position: fixed;
+  z-index: 90;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #0007;
+  padding: 18px;
+}
+
+.shwapno-checkout-address-form {
+  position: relative;
+  display: grid;
+  width: min(430px, 100%);
+  gap: 14px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 12px 35px #0003;
+  padding: 26px;
+}
+
+.shwapno-checkout-address-form h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.shwapno-checkout-address-form label {
+  display: grid;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.shwapno-checkout-address-form input,
+.shwapno-checkout-address-form textarea {
+  width: 100%;
+  border: 1px solid #d8d8df;
+  border-radius: 4px;
+  padding: 9px;
+  resize: vertical;
+}
+
+.shwapno-checkout-address-form > p {
+  margin: 0;
+  color: #c00;
+}
+
+.shwapno-checkout-form-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #e40019;
+  cursor: pointer;
+}
+
+.shwapno-checkout-save-address {
+  min-height: 42px;
+  border: 0;
+  border-radius: 4px;
+  background: #e40019;
+  color: #fff;
+  cursor: pointer;
+}
+
+.shwapno-checkout-login-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  background: #0006;
+  padding: 24px;
+}
+
+.shwapno-checkout-login {
+  position: relative;
+  width: min(534px, 100%);
+  min-height: 400px;
+  transform: translateY(16px);
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 3px 8px #0002;
+  padding: 82px 25px 46px;
+  text-align: center;
+}
+
+.shwapno-checkout-brand-mark {
+  position: absolute;
+  top: -38px;
+  left: 50%;
+  display: grid;
+  width: 100px;
+  height: 100px;
+  place-items: center;
+  transform: translateX(-50%);
+  border: 1px solid #e40019;
+  border-radius: 50%;
+  background: #fff;
+  color: #e40019;
+}
+
+.shwapno-checkout-brand-mark::before {
+  position: absolute;
+  inset: 11px;
+  border: 5px solid #e40019;
+  border-radius: 50%;
+  content: "";
+}
+
+.shwapno-checkout-brand-mark span {
+  position: relative;
+  font-size: 27px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.shwapno-checkout-login-close {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #e40019;
+  cursor: pointer;
+  padding: 0;
+}
+
+.shwapno-checkout-login > h2 {
+  margin: 0 0 21px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.shwapno-checkout-phone {
+  position: relative;
+  display: flex;
+  min-height: 51px;
+  align-items: center;
+  border: 1px solid #d8d8df;
+  text-align: left;
+}
+
+.shwapno-checkout-country-button {
+  display: flex;
+  width: 61px;
+  min-height: 49px;
+  flex: 0 0 61px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  border-right: 1px solid #d8d8df;
+  background: white;
+  cursor: pointer;
+}
+
+.shwapno-checkout-country-button > span {
+  font-size: 21px;
+  line-height: 1;
+}
+
+.shwapno-checkout-country-button svg {
+  color: #888;
+}
+
+.shwapno-checkout-country-prefix {
+  flex: 0 0 auto;
+  color: #171717;
+  padding: 0 7px;
+}
+
+.shwapno-checkout-phone > input {
+  width: 0;
+  min-width: 0;
+  min-height: 49px;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  padding: 0 4px 0 0;
+}
+
+.shwapno-checkout-phone > input::placeholder {
+  color: #9aa1af;
+  opacity: 1;
+}
+
+.shwapno-checkout-country-menu {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 3px);
+  left: 0;
+  display: grid;
+  width: min(260px, 90vw);
+  border: 1px solid #ddd;
+  background: #fff;
+  box-shadow: 0 5px 16px #0002;
+}
+
+.shwapno-checkout-country-menu button {
+  min-height: 38px;
+  border: 0;
+  border-bottom: 1px solid #eee;
+  background: white;
+  cursor: pointer;
+  padding: 0 10px;
+  text-align: left;
+}
+
+.shwapno-checkout-country-menu button:hover,
+.shwapno-checkout-country-menu button[aria-selected="true"] {
+  background: #fff9dc;
+}
+
+.shwapno-checkout-login-submit {
+  width: 100%;
+  min-height: 45px;
+  margin-top: 20px;
+  border: 0;
+  border-radius: 25px;
+  background: #e40000;
+  color: white !important;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.shwapno-checkout-or {
+  margin: 15px 0 17px;
+  font-size: 16px;
+}
+
+.shwapno-checkout-google {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid #dadce0;
+  border-radius: 26px;
+  background: #fff;
+  color: #444;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 16px;
+}
+
+.shwapno-checkout-google > span {
+  background: conic-gradient(from -45deg, #4285f4 0 25%, #34a853 25% 48%, #fbbc05 48% 72%, #ea4335 72% 88%, #4285f4 88%);
+  background-clip: text;
+  color: transparent;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.shwapno-checkout-login-message {
+  margin: 8px 0 0;
+  color: #c00;
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .shwapno-checkout-header {
+    min-height: 52px;
+  }
+
+  .shwapno-checkout-header h1 {
+    font-size: 22px;
+  }
+
+  .shwapno-checkout-content {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 12px;
+    padding: 0 10px 24px;
+  }
+
+  .shwapno-checkout-details {
+    display: block;
+  }
+
+  .shwapno-checkout-time {
+    order: 2;
+  }
+
+  .shwapno-checkout-details {
+    order: 1;
+  }
+
+  .shwapno-checkout-address-heading {
+    padding: 0 12px;
+  }
+
+  .shwapno-checkout-address-heading h2,
+  .shwapno-checkout-time > h2 {
+    font-size: 16px;
+  }
+
+  .shwapno-checkout-login-backdrop {
+    padding: 20px 14px;
+  }
+
+  .shwapno-checkout-login {
+    min-height: 375px;
+    padding: 76px 17px 30px;
+  }
+
+  .shwapno-checkout-login > h2 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .shwapno-checkout-login-backdrop {
+    padding: 18px 12px;
+  }
+
+  .shwapno-checkout-login {
+    min-height: 360px;
+    padding-right: 14px;
+    padding-left: 14px;
   }
 }

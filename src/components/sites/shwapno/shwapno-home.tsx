@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   ChevronDown,
   ChevronLeft,
@@ -8,14 +9,20 @@ import {
   CircleHelp,
   MapPin,
   Menu,
+  Minus,
   Plus,
   Search,
   ShoppingBasket,
   Sparkles,
+  Trash2,
   Truck,
   UserRound,
   X,
 } from "lucide-react";
+import {
+  SHWAPNO_CHECKOUT_STORAGE_KEY,
+  type ShwapnoCheckoutItem,
+} from "@/lib/shwapno-cart";
 import {
   type FormEvent,
   type KeyboardEvent,
@@ -103,7 +110,7 @@ const recommended: Product[] = [
     id: "egg-loose",
     name: "Egg Loose",
     image: "product-egg.webp",
-    price: "11.50",
+    price: "11.25",
     unit: "Per Piece  ·  Min. 12",
   },
   {
@@ -900,6 +907,7 @@ function ProductShelf({
 }
 
 export function ShwapnoHome() {
+  const router = useRouter();
   const [activeHero, setActiveHero] = useState(1);
   const [activeWeekdayTab, setActiveWeekdayTab] = useState(weekdayTabs[0]);
   const brandRailRef = useRef<HTMLDivElement>(null);
@@ -914,6 +922,9 @@ export function ShwapnoHome() {
   const [search, setSearch] = useState("");
   const [activeDepartment, setActiveDepartment] = useState("");
   const [bag, setBag] = useState<Record<string, number>>({});
+  const [couponCode, setCouponCode] = useState("");
+  const [couponMessage, setCouponMessage] = useState("");
+  const [checkoutError, setCheckoutError] = useState("");
   const [timer, setTimer] = useState(25 * 60 + 59);
 
   const searchResults = useMemo(() => {
@@ -923,7 +934,10 @@ export function ShwapnoHome() {
       : [];
   }, [search]);
 
-  const bagItems = allProducts.filter((product) => bag[product.id]);
+  const bagItems = Object.entries(bag).flatMap(([id, quantity]) => {
+    const product = allProducts.find((item) => item.id === id);
+    return product && quantity > 0 ? [product] : [];
+  });
   const bagCount = Object.values(bag).reduce((sum, quantity) => sum + quantity, 0);
   const weekdayProducts = weekdayCollections[activeWeekdayTab];
 
@@ -935,7 +949,69 @@ export function ShwapnoHome() {
   }, []);
 
   const addToBag = (product: Product) => {
-    setBag((current) => ({ ...current, [product.id]: (current[product.id] ?? 0) + 1 }));
+    setBag((current) => ({
+      ...current,
+      [product.id]: (current[product.id] ?? 0) + (product.id === "egg-loose" && !current[product.id] ? 12 : 1),
+    }));
+  };
+
+  const changeBagQuantity = (productId: string, change: number) => {
+    setBag((current) => {
+      const quantity = (current[productId] ?? 0) + change;
+      if (quantity <= 0) {
+        const remaining = { ...current };
+        delete remaining[productId];
+        return remaining;
+      }
+      return { ...current, [productId]: quantity };
+    });
+  };
+
+  const removeFromBag = (productId: string) => {
+    setBag((current) => {
+      const remaining = { ...current };
+      delete remaining[productId];
+      return remaining;
+    });
+  };
+
+  const bagTotal = bagItems.reduce(
+    (total, product) => total + Number(product.price) * bag[product.id],
+    0,
+  );
+
+  const placeOrder = () => {
+    const checkoutItems: ShwapnoCheckoutItem[] = bagItems.map((product) => ({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity: bag[product.id],
+    }));
+
+    try {
+      window.localStorage.setItem(
+        SHWAPNO_CHECKOUT_STORAGE_KEY,
+        JSON.stringify(checkoutItems),
+      );
+      setCheckoutError("");
+      setCartOpen(false);
+      router.push("/checkout");
+    } catch (error) {
+      console.error("Unable to save the Shwapno checkout basket.", error);
+      setCheckoutError("We couldn't continue to checkout. Please try again.");
+    }
+  };
+
+  const formatTaka = (amount: number) =>
+    Number.isInteger(amount) ? String(amount) : amount.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+
+  const applyCoupon = () => {
+    setCouponMessage(
+      couponCode.trim()
+        ? "This coupon code is not available."
+        : "Please enter a coupon code.",
+    );
   };
 
   const moveHero = (direction: -1 | 1) => {
@@ -1492,31 +1568,108 @@ export function ShwapnoHome() {
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="shwapno-cart-drawer-head">
-              <h2 id="cart-title">Your Bag ({bagCount} items)</h2>
+              <h2 id="cart-title">
+                <ShoppingBasket aria-hidden="true" size={24} />
+                <span>{bagItems.length} items</span>
+              </h2>
               <button type="button" aria-label="Close cart" onClick={() => setCartOpen(false)}>
-                <X size={20} />
+                <X aria-hidden="true" size={18} />
+                <span>Close</span>
               </button>
             </div>
-            {bagItems.length ? (
-              <>
-                <div className="shwapno-cart-items">
-                  {bagItems.map((product) => (
-                    <div className="shwapno-cart-line" key={product.id}>
-                      <Image src={`${ASSET}${product.image}`} alt="" width={54} height={54} />
-                      <span>{product.name}</span>
-                      <strong>× {bag[product.id]}</strong>
-                    </div>
-                  ))}
+            {bagItems.length > 0 && (
+              <section className="shwapno-delivery-progress" aria-label="Delivery savings">
+                <strong>Shop ৳{formatTaka(Math.max(0, 400 - bagTotal))} more to save ৳10 on delivery</strong>
+                <div className="shwapno-progress-track">
+                  <span className="shwapno-progress-fill" />
+                  <span className="shwapno-progress-label progress-start">৳49</span>
+                  <span className="shwapno-progress-label progress-current">৳39</span>
+                  <span className="shwapno-progress-label progress-end">৳0</span>
                 </div>
-                <button className="shwapno-checkout-button" type="button">
-                  Continue to checkout
-                </button>
-              </>
+              </section>
+            )}
+            {bagItems.length ? (
+              <div className="shwapno-cart-items">
+                {bagItems.map((product) => (
+                  <div className="shwapno-cart-line" key={product.id}>
+                    <Image src={`${ASSET}${product.image}`} alt="" width={54} height={54} />
+                    <div className="shwapno-cart-product">
+                      <strong>{product.name}</strong>
+                      <div className="shwapno-cart-product-bottom">
+                        <div className="shwapno-cart-prices">
+                          <strong>৳{formatTaka(Number(product.price) * bag[product.id])}</strong>
+                          <span>৳{formatTaka(Number(product.price))} <i aria-hidden="true">|</i> Piece</span>
+                        </div>
+                        <div className="shwapno-cart-controls">
+                          <button
+                            type="button"
+                            aria-label={`Remove ${product.name}`}
+                            onClick={() => removeFromBag(product.id)}
+                          >
+                            <Trash2 aria-hidden="true" size={15} />
+                          </button>
+                          <button
+                            className="quantity-button"
+                            type="button"
+                            aria-label={`Decrease ${product.name} quantity`}
+                            onClick={() => changeBagQuantity(product.id, -1)}
+                          >
+                            <Minus aria-hidden="true" size={18} />
+                          </button>
+                          <span aria-live="polite">{bag[product.id]}</span>
+                          <button
+                            className="quantity-button"
+                            type="button"
+                            aria-label={`Increase ${product.name} quantity`}
+                            onClick={() => changeBagQuantity(product.id, 1)}
+                          >
+                            <Plus aria-hidden="true" size={20} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="shwapno-empty-cart">
                 <ShoppingBasket size={45} />
                 <p>Looks like Your cart is empty.</p>
                 <span>Start shopping</span>
+              </div>
+            )}
+            {bagItems.length > 0 && (
+              <div className="shwapno-cart-footer">
+                <form
+                  className="shwapno-cart-coupon"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    applyCoupon();
+                  }}
+                >
+                  <label className="sr-only" htmlFor="cart-coupon-code">Coupon code</label>
+                  <input
+                    id="cart-coupon-code"
+                    placeholder="Type your coupon code"
+                    value={couponCode}
+                    onChange={(event) => {
+                      setCouponCode(event.currentTarget.value);
+                      setCouponMessage("");
+                    }}
+                  />
+                  <button type="submit">Apply coupon</button>
+                  {couponMessage && <span role="status">{couponMessage}</span>}
+                </form>
+                <div className="shwapno-cart-actions">
+                  <div>Total: <s>৳{formatTaka(bagTotal)}</s></div>
+                  <button
+                    type="button"
+                    onClick={placeOrder}
+                  >
+                    Place Order
+                  </button>
+                </div>
+                {checkoutError && <p className="shwapno-cart-checkout-error" role="alert">{checkoutError}</p>}
               </div>
             )}
           </aside>

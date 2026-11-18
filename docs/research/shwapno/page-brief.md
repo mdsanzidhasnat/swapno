@@ -5,8 +5,10 @@
 | Source | Local route | Notes |
 |---|---|---|
 | `https://www.shwapno.com/?srsltid=ARcRdnrNeoLHuI6cq6BzG0NRPg26peAzdyaQHpHyHlYOkkVAedFNFHmn` | `/` | The `srsltid` query is tracking-only; the homepage is the requested page. |
+| `https://www.shwapno.com/checkout` | `/checkout` | Checkout reached from the cart drawer's Place order action. The sign-in dialog opens by default. |
 
 Implementation: [ShwapnoHome](../../../src/components/sites/shwapno/shwapno-home.tsx), scoped styles in [shwapno-home.css](../../../src/components/sites/shwapno/shwapno-home.css), and locally downloaded media in [public/sites/shwapno/assets](../../../public/sites/shwapno/assets).
+Checkout implementation: [ShwapnoCheckout](../../../src/components/sites/shwapno/shwapno-checkout.tsx) with its route in [page.tsx](../../../src/app/checkout/page.tsx). Cart contents are transferred through browser storage.
 
 ## Observed layout
 
@@ -25,6 +27,7 @@ Implementation: [ShwapnoHome](../../../src/components/sites/shwapno/shwapno-home
 - Product add buttons update the bag count and cart contents.
 - Location selection, account, and cart controls open dialogs/drawers.
 - The promotional dialog opens initially, closes via its close button or backdrop, and has two campaign slides.
+- Selecting Place order from the cart drawer opens `/checkout` with the current basket. The checkout screen shows the delivery time, address, and order total; a phone/Gmail sign-in dialog opens initially, can be dismissed, and can be reopened through Confirm.
 - Mobile has a fixed bottom navigation dock; horizontal category and product rails can be scrolled.
 
 ## Asset map
